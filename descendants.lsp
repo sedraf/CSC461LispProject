@@ -66,8 +66,9 @@
 	(dolist (child temp)
 		(dolist (entry *database*)
 			(
-				(if (equal child (person-name entry))
-					(push entry childList)					
+				(lambda (if (equal child (person-name entry))
+						(push entry childList)					
+					)
 				)
 			)
 		)	
