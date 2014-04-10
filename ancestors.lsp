@@ -29,27 +29,33 @@
 (defun ancestors (name)
 	;List of all ancestors
 	(setq ancList nil)
-
-    
+    (setq temp nil)
+    ;(format t "~%~a's parents:~%" name)
 	;Loop through the database to find the ancestors
 	(dolist (x *database*)
+        ;(print x)
+    
 		;Check if the person has parents
-		(when (equal nil (person-parents x))
-			;(format t "No ancestors.")
-			;(return-from ancestors nil)		
-		)
+		;(when (equal nil (person-parents x))
+		;	(format t "No ancestors.")
+		;	(return-from ancestors nil)		
+		;)
 		;Add person's parents to the list 
+        
 		(when (equal name (person-name x))
-            (setq temp (person-parents x))
-            (print temp)
-            (setq ancList temp)
-            (print ancList)
-			;(dolist (person-parents x)
-				(ancestors (car (person-parents x)))
-			;)
+        
+            (setq temp (append temp (person-parents x)))
+            (if (equal temp nil)
+                ()
+                (print temp))
+            (ancestors (first (person-parents x)))
+            (ancestors (first (last (person-parents x))))
+            
 		)		
 	)
-	
+    ;(format t "~%~%" )
+	;(print temp)
 	;(print ancList) ;for debugging, will get rid of it
-	(return-from ancestors ancList)
+	;(return-from ancestors temp)
+    ;(values)
 )
