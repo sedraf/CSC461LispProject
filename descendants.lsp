@@ -58,8 +58,6 @@
 			(push (person-name child) daugList)
 		)
 	)
-
-	(nreverse daugList)
 	(print daugList)
 )
 
@@ -72,7 +70,5 @@
 			(push (person-name child) sonList)
 		)
 	)
-
-	(nreverse sonList)
 	(print sonList)
 )
