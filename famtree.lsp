@@ -32,7 +32,8 @@ Authors: John M. Weiss, Ph.D. and Hafiza Farzami
     (do ()			; no local vars
         (nil)                   ; never terminate (press Ctrl-C or Ctrl-G to quit)
         (format t "~%>> ")      ; print a prompt
-        (princ (eval (read)))   ; read-eval-print loop
+        ;(princ (eval (read)))   ; read-eval-print loop
+        (eval (read))
     )
 )
 
