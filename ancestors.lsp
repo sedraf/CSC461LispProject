@@ -55,36 +55,22 @@
 
 (defun parents (name)
 	(setf temp (listOfParents name))
-	(setf lst nil)
+	(setf parentList nil)
 
 	(dolist (parent temp)
-		(push (person-name parent) lst)
+		(push (person-name parent) parentList)
 	)	
-	(prin1 lst)
+	(return-from mothers parentList)
 )
 
 (defun mothers (name)
-	(setf temp (listOfParents name))
-	(setf momList nil)
-
-	(dolist (parent temp)
-		(when (equal (person-sex parent) 'female)
-			(push (person-name parent) momList)
-		)
-	)
-	(print momList)
+    (setf momList (listOfParents name))
+	(setf mom (sexFilter momList 'female))
 )
 
 (defun fathers (name)
-	(setf temp (listOfParents name))
-	(setf dadList nil)
-
-	(dolist (parent temp)
-		(when (equal (person-sex parent) 'male)
-			(push (person-name parent) dadList)
-		)
-	)
-	(print dadList)
+    (setf dadList (listOfParents name))
+    (setf dad (sexFilter dadList 'male))
 )
 
 (defun listOfGrandparents (name)
