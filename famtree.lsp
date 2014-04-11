@@ -29,12 +29,7 @@ Authors: John M. Weiss, Ph.D. and Hafiza Farzami
     (load "descendants.lsp")
     (load "ancestors.lsp")
     ;(load "others.lsp")
-    (do ()			; no local vars
-        (nil)                   ; never terminate (press Ctrl-C or Ctrl-G to quit)
-        (format t "~%>> ")      ; print a prompt
-        ;(princ (eval (read)))   ; read-eval-print loop
-        (eval (read))
-    )
+    (REPL)
 )
 
 (defun REPL ()
@@ -42,7 +37,7 @@ Authors: John M. Weiss, Ph.D. and Hafiza Farzami
     (do ()			; no local vars
         (nil)                   ; never terminate (press Ctrl-C or Ctrl-G to quit)
         (format t "~%>> ")      ; print a prompt
-        (princ (eval (read)))   ; read-eval-print loop
+        (eval (read))   ; read-eval-print loop
     )
 )
 
