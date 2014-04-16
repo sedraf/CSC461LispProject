@@ -77,10 +77,10 @@
 	)	
 )
 
-(defun femaledescendants (name)
+(defun female-descendants (name)
 	(sexFilter (descendants name) 'female)
 )
 
-(defun maledescendants (name)
+(defun male-descendants (name)
 	(sexFilter (descendants name) 'male)
 )
