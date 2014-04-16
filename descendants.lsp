@@ -32,7 +32,7 @@
 		(when (equal name (person-name x))
 			(return-from findPerson x)
 		)		
-	)	
+	)
 )
 
 (defun children (name)
@@ -48,15 +48,22 @@
 )
 
 (defun grandchildren (name)
-	
+	(let ((child (children name)) (grands nil))
+		(dolist (item child)
+			(dolist (x (children item))
+				(push x grands)
+			)		
+		)
+		(nreverse grands)
+	)
 )
 
 (defun granddaughters (name)
-	(sexFilter (listOfGrandChildren name) 'female)
+	(sexFilter (grandchildren name) 'female)
 )
 
 (defun grandsons (name)
-	(sexFilter (listOfGrandChildren name) 'male)
+	(sexFilter (grandchildren name) 'male)
 )
 
 (defun descendants (name)
@@ -65,4 +72,13 @@
 		((atom name) (append (children name) (descendants (children name))))
 		(T (append (descendants (car name)) (descendants (cdr name))))
 	)	
+)
+
+(defun femaledescendants (name)
+	(print (descendants name))
+	(sexFilter (descendants name) 'female)
+)
+
+(defun maledescendants (name)
+	(sexFilter (descendants name) 'male)
 )
