@@ -18,11 +18,14 @@
 	(setf lst nil)
 	(dolist (child temp)
 		(setf person (findPerson child))
-		(when (equal (person-sex person) sex)
-			(push (person-name person) lst)
-		)
+		(if (null person) nil 
+
+			(when (equal (person-sex person) sex)
+				(push (person-name person) lst)
+			)
+		)	
 	)
-	lst
+	(nreverse lst)
 )
 
 (defun findPerson (name)	
@@ -36,7 +39,7 @@
 )
 
 (defun children (name)
-    (if (null (findPerson name)) nil (person-children (findPerson name)))
+    (person-children (findPerson name))
 )
 
 (defun daughters (name)
@@ -75,7 +78,6 @@
 )
 
 (defun femaledescendants (name)
-	(print (descendants name))
 	(sexFilter (descendants name) 'female)
 )
 
