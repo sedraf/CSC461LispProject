@@ -10,308 +10,80 @@
 
 
 ;**********************************************************
-;			Functions
+;		   Ancestor Functions		  			   
 ;**********************************************************
-;**********************************************************
-; Author: Julian Brackins
-;
-; Description: The following function returns the list of 
-; 	ancestors of a given name.
-;
-; Parameters:
-;	name - the name of the person whose ancestors
-;		       are being queried
-;
-; Returns:	
-;	ancList - list of a given person's ancestors
-;	nil - if the person does not have ancestors		
-;**********************************************************
-
-(defun listOfParents (name)
-	;List of all parents
-	(setf ParentList nil)
-	(setf temp nil)
-	
-	;Loop through the database to find the parents
-	(dolist (x *database*)
-		;Add person's parents to the list 
-		(when (equal name (person-name x))
-			(dolist (y (person-parents x))
-				(push y temp)
-			)
-		)		
-	)
-
-	(dolist (parent temp)
-		(dolist (entry *database*)
-			(if (equal parent (person-name entry))
-				(push entry ParentList)
-			)
-		)
-	)
-	(return-from listOfParents (nreverse ParentList))
-)
-
-
 (defun parents (name)
-	(setf temp (listOfParents name))
-	(setf parentList nil)
-
-	(dolist (parent temp)
-		(push (person-name parent) parentList)
-	)	
-	(return-from parents parentList)
+	(if (null (findPerson name)) nil (person-parents (findPerson name)))
 )
 
 (defun mothers (name)
-    (setf momList (listOfParents name))
-	(setf mom (sexFilter momList 'female))
+    (sexFilter (parents name) 'female)
 )
 
 (defun fathers (name)
-    (setf dadList (listOfParents name))
-    (setf dad (sexFilter dadList 'male))
-)
-
-(defun listOfGrandparents (name)
-	;List of all parents
-	(setf GrandParentList nil)
-	(setf temp nil)
-    
-	
-	;Loop through the database to find the parents
-	(dolist (x *database*)
-		;Add person's parents to the list 
-		(when (equal name (person-name x))
-			(dolist (y (person-parents x))
-				(push y temp)
-			)
-		)		
-	)
-
-	(dolist (parent temp)
-        (dolist (entry *database*)
-            (when (equal parent (person-name entry))
-                ;Find the parents of these parents
-                (push (listOfParents (person-name entry)) GrandParentList)
-            )
-        )
-        
-    )
-    ;(print GrandParentList)
-    (return-from listOfGrandparents GrandParentList)
+    (sexFilter (parents name) 'male)
 )
 
 (defun grandparents (name)
-	(setf temp (listOfGrandparents name))
-	(setf grandparentList nil)
-	
-    (dolist (grandparent temp)
-        (dolist (x grandparent)
-            (push (person-name x) grandparentList)
-        )
-	)	
-	(return-from grandparents grandparentList)
+	(let ((parent (parents name)) (grands nil))
+		(dolist (item parent)
+			(dolist (x (parents item))
+				(push x grands)
+			)		
+		)
+		(nreverse grands)
+	)
 )
 
 (defun grandmothers (name)
-	(setf temp (listOfGrandparents name))
-	(setf grandmomList nil)
-    
-    (dolist (grandparent temp)
-        (dolist (x grandparent)
-            (when (equal (person-sex x) 'female)
-                (push (person-name x) grandmomList)
-            )
-        )
-	)	
-	(return-from grandmothers grandmomList)
+    (sexFilter (grandparents name) 'female)
 )
 
 (defun grandfathers (name)
-	(setf temp (listOfGrandparents name))
-	(setf granddadList nil)
-    
-    (dolist (grandparent temp)
-        (dolist (x grandparent)
-            (when (equal (person-sex x) 'male)
-                (push (person-name x) granddadList)
-            )
-        )
-	)	
-	(return-from grandfathers granddadList)
+    (sexFilter (grandparents name) 'male)
 )
-
-
-(defun listOfSiblings (name)
-	;List of all parents
-	(setf SiblingList nil)
-	(setf temp nil)
-	
-	;Loop through the database to find the parents
-	(dolist (x *database*)
-		;Add person's parents to the list 
-		(when (equal name (person-name x))
-			(dolist (y (person-parents x))
-				(push y temp)
-			)
-		)		
-	)
-
-	(dolist (parent temp)
-		(dolist (entry *database*)
-			(if (equal parent (person-name entry))
-                ;find the children of these parents
-				(push (listOfChildren (person-name entry)) SiblingList)
-			)
-		)
-	)
-	(return-from listOfSiblings (nreverse SiblingList))
-)
-
 
 (defun siblings (name)
-	(setf temp (listOfSiblings name))
-	(setf siblingList nil)
+    (setf sibs nil)
+    (dolist (x (parents name))
+        (push (children x) sibs)
+    )
     
-    (dolist (sibling temp)
-        (dolist (x sibling)
-            (if (equal (person-name x) name)
-                ()
-                (setf checkdup (person-name x) )
-            )
-            (if (member checkdup siblingList)
-                ()
-                (push checkdup siblingList)
-            )
-        )
-	)	
-	(return-from siblings siblingList)
+    ;collapse multiple lists into singular list!
+    (setf sibs (loop for outer in sibs
+      nconcing (loop for inner in outer collecting inner)))
+    (remove name (remove-duplicates sibs))
 )
 
 
 (defun brothers (name)
-	(setf temp (listOfSiblings name))
-	(setf broList nil)
-    
-    (dolist (sibling temp)
-        (dolist (x sibling)
-            (when (equal (person-sex x) 'male)
-                (if (equal (person-name x) name)
-                    ()
-                    (setf checkdup (person-name x) )
-                )
-                (if (member checkdup broList)
-                    ()
-                    (push checkdup broList)
-                )
-            )
-        )
-	)	
-	(return-from brothers broList)
+    (sexFilter (siblings name) 'male)
 )
 
 (defun sisters (name)
-	(setf temp (listOfSiblings name))
-	(setf sisList nil)
-    
-    (dolist (sibling temp)
-        (dolist (x sibling)
-            (when (equal (person-sex x) 'female)
-                (if (equal (person-name x) name)
-                    ()
-                    (setf checkdup (person-name x) )
-                )
-                (if (member checkdup sisList)
-                    ()
-                    (push checkdup sisList)
-                )
-            )
-        )
-	)	
-	(return-from sisters sisList)
+	(sexFilter (siblings name) 'female)
 )
-
-(defun listOfAncestors (name)
-	;List of all parents
-	
-    (setf temp nil)
-	(setf mommies nil)
-    (setf daddies nil)
-	
-	;Loop through the database to find the parents
-	(dolist (x *database*)
-		;Add person's parents to the list 
-		(when (equal name (person-name x))
-            (push x *AncList*)
-            ;(format t "Processing ~a...~%" (person-name x))
-            (if (equal nil (person-parents x))
-                ()
-                (dolist (y (person-parents x))
-                    (push y temp)
-                )
-            )
-		)		
-	)
-    
-	(dolist (parent temp)
-		(dolist (entry *database*)
-			(when (equal parent (person-name entry))
-                (if (equal (person-sex entry) 'male)
-                    (push entry daddies)
-                    (push entry mommies)
-                )
-			)
-		)
-	)
-
-    (dolist (xy daddies)
-        (dolist (xx mommies)
-            (listOfAncestors (person-name xx))
-        )
-        (listOfAncestors (person-name xy))
-    )
-
-	(return-from listOfAncestors (nreverse *AncList*))
-)
-
 
 (defun ancestors (name)
-    (setf *AncList* nil) 
-    (setf ancestorList nil)
-	(setf temp (listOfAncestors name))
-    
-	(dolist (ancestor temp)
-        (if (equal (person-name ancestor) name)
-            ()
-            (push (person-name ancestor) ancestorList)
-        )
+    (cond 
+		((null name) nil)
+		((atom name) (append (parents name) (ancestors (parents name))))
+		(T (append (ancestors (car name)) (ancestors (cdr name))))
 	)	
-	(return-from ancestors ancestorList)
 )
 
-(defun ancestors-female (name)
-    (setf *AncList* nil) 
-    (setf temp (listOfAncestors name))
-    (setf ancestorList nil)
-    (dolist (ancestor temp)
-        (if (equal (person-name ancestor) name)
-            ()
-            (push ancestor ancestorList)
-        )
+(defun female-ancestors (name)
+    (cond 
+		((null name) nil)
+		((atom name) (append (mothers name) (ancestors (parents name))))
+		(T (append (ancestors (car name)) (ancestors (cdr name))))
 	)	
-	(setf ancestorList (sexFilter ancestorList 'female))
 )
 
-(defun ancestors-male (name)
-    (setf *AncList* nil) 
-    (setf temp (listOfAncestors name))
-    (setf ancestorList nil)
-    (dolist (ancestor temp)
-        (if (equal (person-name ancestor) name)
-            ()
-            (push ancestor ancestorList)
-        )
+(defun male-ancestors (name)
+    (cond 
+		((null name) nil)
+		((atom name) (append (fathers name) (ancestors (parents name))))
+		(T (append (ancestors (car name)) (ancestors (cdr name))))
 	)	
-	(setf ancestorList (sexFilter ancestorList 'male))
 )
