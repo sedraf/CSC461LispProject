@@ -26,6 +26,7 @@ Authors: John M. Weiss, Ph.D. and Hafiza Farzami
     )
     (nreverse *database*)
 
+    (load "filters.lsp")
     (load "descendants.lsp")
     (load "ancestors.lsp")
     (load "others.lsp")

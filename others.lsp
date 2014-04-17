@@ -57,3 +57,23 @@
 (defun nephews (name)
     (sexFilter (nieces-and-nephews name) 'male)
 )
+
+(defun cousins (name)
+    (setf couslist nil)
+    (dolist (x (aunts-and-uncles name))
+        (push (children x) couslist)
+    )
+    
+    ;collapse multiple lists into singular list!
+    (setf couslist (loop for outer in couslist
+      nconcing (loop for inner in outer collecting inner)))
+    (remove name (remove-duplicates couslist))
+)
+
+(defun female-cousins (name)
+    (sexFilter (cousins name) 'female)
+)
+
+(defun male-cousins (name)
+    (sexFilter (cousins name) 'male)
+)
