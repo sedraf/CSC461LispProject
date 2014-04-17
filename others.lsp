@@ -1,0 +1,18 @@
+(defun aunts-and-uncles (name)
+	(let (sibs)
+		(dolist (parent (parents name))
+			(dolist (x (siblings parent))
+				(push x sibs)
+			)
+		)
+		(return-from aunts-and-uncles sibs)
+	)
+)
+
+(defun aunts (name)
+	(sexFilter (aunts-and-uncles name) 'female)
+)
+
+(defun uncles (name)
+	(sexFilter (aunts-and-uncles name) 'male)
+)
