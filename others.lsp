@@ -1,13 +1,12 @@
 (defun siblings (name)
+;Return the names of all a given parent's children
+;except for the person who's name was entered
     (setf sibs nil)
     (dolist (x (parents name))
         (push (children x) sibs)
     )
-    
     ;collapse multiple lists into singular list!
-    (setf sibs (loop for outer in sibs
-      nconcing (loop for inner in outer collecting inner)))
-    (remove name (remove-duplicates sibs))
+    (collapseList name sibs)
 )
 
 
@@ -20,6 +19,7 @@
 )
 
 (defun aunts-and-uncles (name)
+;Return the siblings of your parents
 	(let (sibs)
 		(dolist (parent (parents name))
 			(dolist (x (siblings parent))
@@ -39,15 +39,13 @@
 )
 
 (defun nieces-and-nephews (name)
-    (setf nieneph nil)
+;Return a list of your siblings' children
+    (setf niecenephew nil)
     (dolist (x (siblings name))
-        (push (children x) nieneph)
+        (push (children x) niecenephew)
     )
-    
     ;collapse multiple lists into singular list!
-    (setf nieneph (loop for outer in nieneph
-      nconcing (loop for inner in outer collecting inner)))
-    (remove name (remove-duplicates nieneph))
+    (collapseList name niecenephew)
 )
 
 (defun nieces (name)
@@ -59,15 +57,13 @@
 )
 
 (defun cousins (name)
+;Return the Names of your aunts and uncles' children
     (setf couslist nil)
     (dolist (x (aunts-and-uncles name))
         (push (children x) couslist)
     )
-    
     ;collapse multiple lists into singular list!
-    (setf couslist (loop for outer in couslist
-      nconcing (loop for inner in outer collecting inner)))
-    (remove name (remove-duplicates couslist))
+    (collapseList name couslist)
 )
 
 (defun female-cousins (name)

@@ -13,6 +13,7 @@
 ;**********************************************************
 
 (defun children (name)
+;Return a given person's child list
     (person-children (findPerson name))
 )
 
@@ -25,6 +26,7 @@
 )
 
 (defun grandchildren (name)
+;Return a list of all of a person's children's children
 	(let ((child (children name)) (grands nil))
 		(dolist (item child)
 			(dolist (x (children item))
@@ -44,6 +46,7 @@
 )
 
 (defun descendants (name)
+;Recursively add each child to a list, then return a list of their children
 	(cond 
 		((null name) nil)
 		((atom name) (append (children name) (descendants (children name))))

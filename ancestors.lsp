@@ -13,6 +13,7 @@
 ;		   Ancestor Functions		  			   
 ;**********************************************************
 (defun parents (name)
+    ;verify person's name is in family tree, then return their parents
 	(if (null (findPerson name)) nil (person-parents (findPerson name)))
 )
 
@@ -25,6 +26,8 @@
 )
 
 (defun grandparents (name)
+;go through each of your parents, return
+;the names of their parents
 	(let ((parent (parents name)) (grands nil))
 		(dolist (item parent)
 			(dolist (x (parents item))
@@ -44,6 +47,7 @@
 )
 
 (defun ancestors (name)
+;recursively add each person's parents, then find who their parents are.
     (cond 
 		((null name) nil)
 		((atom name) (append (parents name) (ancestors (parents name))))
