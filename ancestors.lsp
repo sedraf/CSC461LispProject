@@ -12,6 +12,8 @@
 ;**********************************************************
 ;		   Ancestor Functions		  			   
 ;**********************************************************
+
+;return list of parents
 (defun parents (name)
     ;verify person's name is in family tree, then return their parents
 	(if (null (findPerson name)) nil (person-parents (findPerson name)))
@@ -26,8 +28,7 @@
 )
 
 (defun grandparents (name)
-;go through each of your parents, return
-;the names of their parents
+;Grandparents = Parents of Parents
 	(let ((parent (parents name)) (grands nil))
 		(dolist (item parent)
 			(dolist (x (parents item))

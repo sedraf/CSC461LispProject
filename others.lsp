@@ -16,6 +16,7 @@
 (defun siblings (name)
 ;Return the names of all a given parent's children
 ;except for the person who's name was entered
+;Siblings = Children of Parents - Oneself
     (setf sibs nil)
     (dolist (x (parents name))
         (push (children x) sibs)
@@ -35,7 +36,7 @@
 
 ;Returns the list of aunts and uncles
 (defun aunts-and-uncles (name)
-;Return the siblings of your parents
+;Aunts & Uncles = Siblings of Parents
 	(let (sibs)
 		(dolist (parent (parents name))
 			(dolist (x (siblings parent))
@@ -57,7 +58,7 @@
 )
 
 (defun nieces-and-nephews (name)
-;Return a list of your siblings' children
+;Nieces & Nephews = Children of Siblings
     (setf niecenephew nil)
     (dolist (x (siblings name))
         (push (children x) niecenephew)
@@ -75,7 +76,7 @@
 )
 
 (defun cousins (name)
-;Return the Names of your aunts and uncles' children
+;Cousins = Children of Aunts & Uncles
     (setf couslist nil)
     (dolist (x (aunts-and-uncles name))
         (push (children x) couslist)

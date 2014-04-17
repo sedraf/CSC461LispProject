@@ -26,7 +26,7 @@
 )
 
 (defun grandchildren (name)
-;Return a list of all of a person's children's children
+;Grandchildren = Children of Children
 	(let ((child (children name)) (grands nil))
 		(dolist (item child)
 			(dolist (x (children item))
