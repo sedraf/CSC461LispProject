@@ -1,3 +1,18 @@
+;**********************************************************
+; File Name: descendants.lsp
+; Brief Description: This file contains the code necessary
+;	for querying the list of a given person's siblings,
+;	aunts and uncles, nieces and nephews. 
+; Authors: Julian Brackins and Hafiza Farzami
+; Course: Programming Languages, CSC - 461
+; Due Date: April 16, 2014
+; Professor: Dr. John Weiss
+;**********************************************************
+
+;**********************************************************
+;		    Other Functions		  			   
+;**********************************************************
+
 (defun siblings (name)
     (setf sibs nil)
     (dolist (x (parents name))
@@ -16,6 +31,7 @@
 	(sexFilter (siblings name) 'female)
 )
 
+;Returns the list of aunts and uncles
 (defun aunts-and-uncles (name)
 	(let (sibs)
 		(dolist (parent (parents name))
@@ -27,10 +43,12 @@
 	)
 )
 
+;Returns the list of aunts
 (defun aunts (name)
 	(sexFilter (aunts-and-uncles name) 'female)
 )
 
+;Returns the list of uncles
 (defun uncles (name)
 	(sexFilter (aunts-and-uncles name) 'male)
 )
