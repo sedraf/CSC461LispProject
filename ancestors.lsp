@@ -73,17 +73,30 @@
 )
 
 (defun female-ancestors (name)
-    (cond 
-		((null name) nil)
-		((atom name) (append (mothers name) (ancestors (parents name))))
-		(T (append (ancestors (car name)) (ancestors (cdr name))))
-	)	
+	(sexFilter (ancestors name) 'female)
 )
 
 (defun male-ancestors (name)
-    (cond 
-		((null name) nil)
-		((atom name) (append (fathers name) (ancestors (parents name))))
-		(T (append (ancestors (car name)) (ancestors (cdr name))))
-	)	
+	(sexFilter (ancestors name) 'male)
+)
+
+
+(defun nieces-and-nephews (name)
+    (setf nieneph nil)
+    (dolist (x (siblings name))
+        (push (children x) nieneph)
+    )
+    
+    ;collapse multiple lists into singular list!
+    (setf nieneph (loop for outer in nieneph
+      nconcing (loop for inner in outer collecting inner)))
+    (remove name (remove-duplicates nieneph))
+)
+
+(defun nieces (name)
+    (sexFilter (nieces-and-nephews name) 'female)
+)
+
+(defun nephews (name)
+    (sexFilter (nieces-and-nephews name) 'male)
 )
