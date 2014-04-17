@@ -3,11 +3,8 @@
     (dolist (x (parents name))
         (push (children x) sibs)
     )
-    
     ;collapse multiple lists into singular list!
-    (setf sibs (loop for outer in sibs
-      nconcing (loop for inner in outer collecting inner)))
-    (remove name (remove-duplicates sibs))
+    (collapseList name sibs)
 )
 
 
@@ -39,15 +36,12 @@
 )
 
 (defun nieces-and-nephews (name)
-    (setf nieneph nil)
+    (setf niecenephew nil)
     (dolist (x (siblings name))
-        (push (children x) nieneph)
+        (push (children x) niecenephew)
     )
-    
     ;collapse multiple lists into singular list!
-    (setf nieneph (loop for outer in nieneph
-      nconcing (loop for inner in outer collecting inner)))
-    (remove name (remove-duplicates nieneph))
+    (collapseList name niecenephew)
 )
 
 (defun nieces (name)
@@ -63,11 +57,8 @@
     (dolist (x (aunts-and-uncles name))
         (push (children x) couslist)
     )
-    
     ;collapse multiple lists into singular list!
-    (setf couslist (loop for outer in couslist
-      nconcing (loop for inner in outer collecting inner)))
-    (remove name (remove-duplicates couslist))
+    (collapseList name couslist)
 )
 
 (defun female-cousins (name)

@@ -23,3 +23,9 @@
 		)		
 	)
 )
+
+(defun collapseList (name lst)
+    (setf lst (loop for outer in lst
+      nconcing (loop for inner in outer collecting inner)))
+    (remove name (remove-duplicates lst))
+)
