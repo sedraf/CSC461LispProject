@@ -1,3 +1,14 @@
+;**********************************************************
+; File Name: filters.lsp
+; Brief Description: This file contains the code with
+;   filters, or often-used code blocks in this program
+;   for list processing.
+; Authors: Julian Brackins and Hafiza Farzami
+; Course: Programming Languages, CSC - 461
+; Due Date: April 16, 2014
+; Professor: Dr. John Weiss
+;**********************************************************
+
 ;Given a list of structs and a gender, it filters out by
 ;gender
 (defun sexFilter (temp sex)
@@ -24,6 +35,8 @@
 	)
 )
 
+;Take a list of lists, and collapse it into a singular list
+;Also removes the parameter "name" from the list, if present
 (defun collapseList (name lst)
     (setf lst (loop for outer in lst
       nconcing (loop for inner in outer collecting inner)))
