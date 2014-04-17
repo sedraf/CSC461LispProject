@@ -28,6 +28,7 @@ Authors: John M. Weiss, Ph.D. and Hafiza Farzami
 
     (load "descendants.lsp")
     (load "ancestors.lsp")
+    (load "others.lsp")
 )
 
 (main (car *args*))
